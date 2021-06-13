@@ -14,7 +14,7 @@ def get_value(collection, query_key, query_value, db_key):
     for value in doc:
         return (value)
 
-def get_size(collection):
+def get_collection_length(collection):
     db = client[os.environ['DATABASE']]
     col = db[collection]
     return (col.count_documents({}))

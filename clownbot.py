@@ -45,7 +45,7 @@ async def sad(ctx):
 @client.command()
 async def londa(ctx):
     e = discord.Embed()
-    selection = random.randint(1, mongo.get_size('Londa'))
+    selection = random.randint(1, mongo.get_collection_length('Londa'))
     selection = str(selection)
     data_type = mongo.get_value('Londa', 'internal_id', selection, 'type')
     if (data_type['type'] == 'text'):
@@ -60,10 +60,14 @@ async def londa(ctx):
 @client.command()
 async def pun(ctx):
     e = discord.Embed()
-    selection = random.randint(1, mongo.get_size('Puns'))
+    selection = random.randint(1, mongo.get_collection_length('Puns'))
     selection = str(selection)
     db_text = mongo.get_value('Puns', 'internal_id', selection, 'text')
     e.description = db_text['text']
     await ctx.send(embed = e)
-    
+
+@client.command()
+async def callout(ctx, target: discord.Member, *, reason):
+    return
+
 client.run(os.environ['CLOWNBOT_API_KEY'])
