@@ -57,7 +57,7 @@ async def londa(ctx):
         e.set_image(url=formattedURL)
     await ctx.send(embed = e)
 
-@client.command()
+@client.command(pass_context=True)
 async def pun(ctx):
     e = discord.Embed()
     selection = random.randint(1, mongo.get_collection_length('Puns'))
@@ -68,6 +68,15 @@ async def pun(ctx):
 
 @client.command()
 async def callout(ctx, target: discord.Member, *, reason):
-    return
+    await ctx.message.delete()
+    e = discord.Embed(description=target.mention + 'has been called out for ' + '_**```diff\n' + str(reason) + '```**_')
+    mongo.insert_record('Callout', target.mention, reason)
+    await ctx.send(embed=e)
+
+@client.command()
+async def calloutall(ctx, target: discord.Member):
+    await ctx.message.delete()
+    e = discord.Embed(description=target.mention + ' has been called out for the following:\n' + mongo.get_all_records_value('Callout', 'user', target.mention, 'reason'))
+    await ctx.send(embed=e)
 
 client.run(os.environ['CLOWNBOT_API_KEY'])
