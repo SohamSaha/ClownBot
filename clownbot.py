@@ -1,7 +1,8 @@
 import discord
-from discord.ext import commands
 import mongodb as mongo
 import os
+import random
+from discord.ext import commands
 
 client = commands.Bot(command_prefix='c.')
 
@@ -12,33 +13,57 @@ async def on_ready():
 @client.command()
 async def regrets(ctx):
     e = discord.Embed(description='Foolish mortal, shed your consciousness and place thy useless mortal coil on the cushioned horizontal surface plebians call a bed')
-    formattedURL = str(list(mongo.get_link('Sneer', 'name', 'sneer_cat').values()))
-    formattedURL = formattedURL.strip('[]').strip("''")
+    formattedURL = mongo.get_value('Sneer', 'name', 'sneer_cat', 'link')
+    formattedURL = formattedURL['link']
     e.set_image(url=formattedURL)
     await ctx.send(embed = e)
 
 @client.command()
 async def clown(ctx):
     e = discord.Embed()
-    formattedURL = str(list(mongo.get_link('Clown', 'name', 'clown_shoes').values()))
-    formattedURL = formattedURL.strip('[]').strip("''")
+    formattedURL = mongo.get_value('Clown', 'name', 'clown_shoes', 'link')
+    formattedURL = formattedURL['link']
     e.set_image(url=formattedURL)
     await ctx.send(embed = e)
 
 @client.command()
 async def high(ctx):
     e = discord.Embed()
-    formattedURL = str(list(mongo.get_link('Cats', 'name', 'high_cat').values()))
-    formattedURL = formattedURL.strip('[]').strip("''")
+    formattedURL = mongo.get_value('Cats', 'name', 'high_cat', 'link')
+    formattedURL = formattedURL['link']
     e.set_image(url=formattedURL)
     await ctx.send(embed = e)
 
 @client.command()
 async def sad(ctx):
     e = discord.Embed()
-    formattedURL = str(list(mongo.get_link('Cats', 'name', 'sad_cat').values()))
-    formattedURL = formattedURL.strip('[]').strip("''")
+    formattedURL = mongo.get_value('Cats', 'name', 'sad_cat', 'link')
+    formattedURL = formattedURL['link']
     e.set_image(url=formattedURL)
     await ctx.send(embed = e)
 
+@client.command()
+async def londa(ctx):
+    e = discord.Embed()
+    selection = random.randint(1, mongo.get_size('Londa'))
+    selection = str(selection)
+    data_type = mongo.get_value('Londa', 'internal_id', selection, 'type')
+    if (data_type['type'] == 'text'):
+        db_text = mongo.get_value('Londa', 'internal_id', selection, 'text')
+        e.description = db_text['text']
+    if (data_type['type'] == 'picture'):
+        formattedURL = mongo.get_value('Londa', 'internal_id', selection, 'link')
+        formattedURL = formattedURL['link']
+        e.set_image(url=formattedURL)
+    await ctx.send(embed = e)
+
+@client.command()
+async def pun(ctx):
+    e = discord.Embed()
+    selection = random.randint(1, mongo.get_size('Puns'))
+    selection = str(selection)
+    db_text = mongo.get_value('Puns', 'internal_id', selection, 'text')
+    e.description = db_text['text']
+    await ctx.send(embed = e)
+    
 client.run(os.environ['CLOWNBOT_API_KEY'])
