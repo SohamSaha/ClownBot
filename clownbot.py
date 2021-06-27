@@ -6,6 +6,8 @@ from discord.ext import commands
 
 client = commands.Bot(command_prefix='c.')
 
+#This bot is synced up with the hotmail heroku account
+
 @client.event
 async def on_ready():
     print('Bot is ready')
